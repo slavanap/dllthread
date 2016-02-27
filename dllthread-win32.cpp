@@ -43,7 +43,7 @@ static DWORD WINAPI threadstart(LPVOID param) {
 }
 
 void dllthread::init(std::function<void()>&& fn) {
-	auto init = new InitStruct(std::move(fn));
+	auto init = new InitStruct(std::forward<std::function<void()>>(fn));
 	try {
 		m_handle = CreateEvent(NULL, false, false, NULL);
 		if (m_handle == NULL) {

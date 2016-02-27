@@ -10,8 +10,6 @@
 
 // Unitily class. Similar to recursive_mutex, can be safely used during Dll initialization
 class RTLSection {
-private:
-	RTL_CRITICAL_SECTION cs;
 public:
 	typedef RTL_CRITICAL_SECTION* native_handle_type;
 
@@ -24,6 +22,8 @@ public:
 	bool try_lock() { return !!TryEnterCriticalSection(&cs); }
 	void unlock() { LeaveCriticalSection(&cs); }
 	native_handle_type native_handle() { return &cs; }
+private:
+	RTL_CRITICAL_SECTION cs;
 };
 
 class dllthread {
