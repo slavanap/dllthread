@@ -80,6 +80,10 @@ DWORD WINAPI dllthread::threadstart(LPVOID param) {
 	SetEvent(init->m_threadStarted);
 	if (!init->m_threadCancelled)
 		init->m_fn();
+	// TODO: here's the bottleneck. If you're joining thread within DLL_PROCESS_DETACH, this code below may not be
+	// fully finish atomically. We need to SetEvent and ExitThread atomically before DLL will be unloaded.
+	// This is a bug. A bad workaround would be to Sleep() for some amount of time, to let the thread to finish
+	// or allow memory leak for init structure with SuspendThread() and TerminateThread() in join implementation.
 	SetEvent(init->m_threadEnded);
 	delete init;
 #if 0

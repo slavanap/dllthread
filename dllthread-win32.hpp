@@ -1,7 +1,11 @@
 #pragma once
 
+#ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
+#endif
+#ifndef NOMINMAX
 #define NOMINMAX
+#endif
 #include <Windows.h>
 
 #include <functional>
@@ -37,7 +41,7 @@ public:
 	
 	dllthread() { reset(*this); }
 
-	template<typename Fn, typename ...Args, std::enable_if_t<!std::is_same<std::decay_t<Fn>, dllthread>::value, int> = 0>
+	template<typename Fn, typename ...Args, typename std::enable_if<!std::is_same<typename std::decay<Fn>::type, dllthread>::value, int>::type* = nullptr>
 	explicit dllthread(Fn&& fn, Args&&... args) {
 		reset(*this);
 		init(std::move(std::bind(std::forward<Fn>(fn), std::forward<Args>(args)...)));
