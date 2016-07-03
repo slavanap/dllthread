@@ -1,4 +1,4 @@
-#include "dllthread-win32.hpp"
+#include "dllthread.hpp"
 
 struct dllthread::InitStruct {
 	std::function<void()> m_fn;
@@ -21,7 +21,9 @@ struct dllthread::InitStruct {
 
 void dllthread::join() {
 	if (!joinable())
-		throw std::runtime_error("This thread is not joinable");
+		throw std::invalid_argument("This thread is not joinable");
+	if (GetCurrentThreadId() == m_id)
+		throw std::runtime_error("Can't join. Possible deadlock.");
 
 	// this is the most complex part
 	// first of all we need to check whether the thread was started.
@@ -97,8 +99,8 @@ void dllthread::init(std::function<void()>&& fn) {
 	m_initstruct = init;
 	try {
 		;
-		if ((m_threadStarted = CreateEvent(NULL, false, false, NULL)) == NULL ||
-			(m_threadEnded = CreateEvent(NULL, false, false, NULL)) == NULL)
+		if ((m_threadStarted = CreateEvent(nullptr, false, false, nullptr)) == nullptr ||
+			(m_threadEnded = CreateEvent(nullptr, false, false, nullptr)) == nullptr)
 		{
 			m_threadStarted = INVALID_HANDLE_VALUE;
 			m_threadEnded = INVALID_HANDLE_VALUE;
@@ -109,8 +111,8 @@ void dllthread::init(std::function<void()>&& fn) {
 			throw std::system_error(0, std::system_category(), "DuplicateHandle failed");
 		if (!DuplicateHandle(hProcess, m_threadEnded, hProcess, &init->m_threadEnded, 0, FALSE, DUPLICATE_SAME_ACCESS))
 			throw std::system_error(0, std::system_category(), "DuplicateHandle failed");
-		m_thread = CreateThread(NULL, 0, threadstart, init, 0, &m_id);
-		if (m_thread == NULL) {
+		m_thread = CreateThread(nullptr, 0, threadstart, init, 0, &m_id);
+		if (m_thread == nullptr) {
 			m_thread = INVALID_HANDLE_VALUE;
 			throw std::system_error(0, std::system_category(), "Can't start new thread");
 		}

@@ -1,0 +1,5 @@
+if (WIN32)
+	project(dllthread)
+	add_library(${PROJECT_NAME} STATIC dllthread-win32.cpp)
+	set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "Third Party")
+endif()

@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef _WIN32
+
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
@@ -100,3 +102,10 @@ private:
 	void init(std::function<void()>&& fn);
 	static void reset(dllthread& obj);
 };
+
+#else // ifdef _WIN32
+
+#include <thread>
+typedef std::thread dllthread;
+
+#endif // ifdef _WIN32
