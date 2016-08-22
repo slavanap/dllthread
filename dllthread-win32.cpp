@@ -71,12 +71,6 @@ void dllthread::detach() {
 }
 
 DWORD WINAPI dllthread::threadstart(LPVOID param) {
-#if 0
-	const char *str1 = "############################### NEW DLLTHREAD #################################\n";
-	const char *str2 = "############################### DLLTHREAD FINSHED #############################\n";
-	DWORD ret;
-	WriteConsoleA(GetStdHandle(STD_OUTPUT_HANDLE), str1, strlen(str1), &ret, NULL);
-#endif
 	auto init = reinterpret_cast<InitStruct*>(param);
 	// here's a check for deadlock. See SetEvent(m_threadEnded) in dllthread::join()
 	SetEvent(init->m_threadStarted);
@@ -88,9 +82,6 @@ DWORD WINAPI dllthread::threadstart(LPVOID param) {
 	// or allow memory leak for init structure with SuspendThread() and TerminateThread() in join implementation.
 	SetEvent(init->m_threadEnded);
 	delete init;
-#if 0
-	WriteConsoleA(GetStdHandle(STD_OUTPUT_HANDLE), str2, strlen(str2), &ret, NULL);
-#endif
 	return 0;
 }
 
