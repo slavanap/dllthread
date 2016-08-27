@@ -49,10 +49,7 @@ public:
 		init(std::move(std::bind(std::forward<Fn>(fn), std::forward<Args>(args)...)));
 	}
 
-	~dllthread() { 
-		if (joinable())
-			join();
-	}
+	~dllthread();
 
 	dllthread(const dllthread&) = delete;
 	dllthread& operator=(const dllthread&) = delete;

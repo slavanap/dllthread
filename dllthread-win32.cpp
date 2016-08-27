@@ -19,6 +19,11 @@ struct dllthread::InitStruct {
 	}
 };
 
+dllthread::~dllthread() {
+	if (joinable())
+		join();
+}
+
 void dllthread::join() {
 	if (!joinable())
 		throw std::invalid_argument("This thread is not joinable");
