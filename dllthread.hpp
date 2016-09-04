@@ -2,17 +2,16 @@
 
 #ifdef _WIN32
 
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
+#ifndef _WINDOWS_
+#	define WIN32_LEAN_AND_MEAN
+#	define NOMINMAX
+#	include <Windows.h>
 #endif
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-#include <Windows.h>
 
 #include <functional>
 #include <system_error>
 #include <thread>
+
 
 // Unitily class. Similar to recursive_mutex, can be safely used during Dll initialization
 class RTLSection {

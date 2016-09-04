@@ -1,5 +1,6 @@
 #include "dllthread.hpp"
 
+
 struct dllthread::InitStruct {
 	std::function<void()> m_fn;
 	HANDLE m_threadStarted, m_threadEnded;
